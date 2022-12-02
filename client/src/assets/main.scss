@@ -1,0 +1,31 @@
+.dark {
+  background: rgb(30, 30, 30);
+  color: white;
+  nav {
+    ul {
+      li {
+        a {
+          h1 {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+  #exampleModal {
+    .modal-dialog {
+      .modal-content {
+        background: black;
+      }
+    }
+  }
+  .input-group {
+    .input-group-text {
+      background: #212529;
+      color: white;
+    }
+    input {
+      color: white;
+    }
+  }
+}

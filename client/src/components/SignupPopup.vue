@@ -19,7 +19,7 @@
 
 <template>
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#popup">
-    Launch demo modal
+    Launch
   </button>
   <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

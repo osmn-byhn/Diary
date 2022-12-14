@@ -19,7 +19,14 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  res.json({message: 'bu bir id için get isteğidir.'})
+  try {
+      const user = await User.findById(req.params.id)
+      if (!user) throw new Error('No user')
+
+      res.status(200).json(user.diaries)
+  } catch (error) {
+      res.status(500).json({ message: error.message })
+  }
 })
 
 router.post("/", async (req, res) => {
@@ -31,6 +38,7 @@ router.post("/", async (req, res) => {
       fullName: req.body.fullName,
       email: req.body.email,
       password: hashedPwd,
+      diaries: req.body.diaries
     });
     res.send(insertResult);
   } catch (error) {
@@ -38,12 +46,31 @@ router.post("/", async (req, res) => {
     res.status(500).send("Internal Server error Occured");
   }
 });
-router.put('/:id', async (req, res) => {
-  res.json({message: 'bu bir put isteğidir.'})
-})
 
-router.delete('/:id', async (req, res) => {
-  res.json({message: 'bu bir delete isteğidir.'})
+
+router.post('/:id', async (req, res) => {
+  //find the user first, then add the post to it
+  const user = await User.findById(req.params.id)
+  try {
+    const diaryPosting = await user.diaries.push({
+      title: req.body.title,
+      description: req.body.description
+    });
+    await user.save()
+    res.sendStatus(200).send(diaryPosting)
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500).send("Olmadı be knk :(");
+
+  } /*finally {
+
+  }*/
+
+});
+
+router.delete('/', async (req, res) => {
+  await User.deleteMany({ name: /osman@gmail.com/});
+  console.log("Başarılı");
 })
 
 export default router

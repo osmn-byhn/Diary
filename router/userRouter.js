@@ -2,9 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 const saltRounds = 10
-
 import User from '../modals/userModal.js'
-
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -47,9 +45,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-
 router.post('/:id', async (req, res) => {
-  //find the user first, then add the post to it
   const user = await User.findById(req.params.id)
   try {
     const diaryPosting = await user.diaries.push({
@@ -61,11 +57,7 @@ router.post('/:id', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.sendStatus(500).send("Olmadı be knk :(");
-
-  } /*finally {
-
-  }*/
-
+  }
 });
 
 router.delete('/', async (req, res) => {

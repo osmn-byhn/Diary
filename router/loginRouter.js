@@ -1,12 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
-
-
 import User from '../modals/userModal.js'
-
 const router = express.Router()
-
 
 router.get('/', async (req, res) => {
     try {

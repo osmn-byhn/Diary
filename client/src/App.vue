@@ -9,6 +9,7 @@
   <Navbar />
   <Popup />
   <RouterView />
+  
 </template>
 
 <style scoped lang="scss">

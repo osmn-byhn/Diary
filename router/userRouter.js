@@ -1,9 +1,16 @@
-import express from 'express'
+import express, { response } from 'express'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 const saltRounds = 10
 import User from '../modals/userModal.js'
 const router = express.Router()
+
+/* 
+  - Bir Get isteği ✓
+  - Kayıt için bir post isteği ✓
+  - Kullanıcı hesap kapatmak için delete isteği ✓
+  - Kullanıcı verilerini güncelleyebilmek için bir put isteği ✓
+*/
 
 router.get('/', async (req, res) => {
     try {
@@ -16,17 +23,6 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
-  try {
-      const user = await User.findById(req.params.id)
-      if (!user) throw new Error('No user')
-
-      res.status(200).json(user.diaries)
-  } catch (error) {
-      res.status(500).json({ message: error.message })
-  }
-})
-
 router.post("/", async (req, res) => {
   console.log(req.body);
   try {
@@ -35,8 +31,7 @@ router.post("/", async (req, res) => {
       username: req.body.username,
       fullName: req.body.fullName,
       email: req.body.email,
-      password: hashedPwd,
-      diaries: req.body.diaries
+      password: hashedPwd
     });
     res.send(insertResult);
   } catch (error) {
@@ -45,24 +40,24 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post('/:id', async (req, res) => {
-  const user = await User.findById(req.params.id)
+router.put('/:id', async(req, res) => {
   try {
-    const diaryPosting = await user.diaries.push({
-      title: req.body.title,
-      description: req.body.description
-    });
-    await user.save()
-    res.sendStatus(200).send(diaryPosting)
+    const user = await User.findByIdAndUpdate(req.params.id, req.body)
+    if (!user) throw Error('Something went wrong')
+    const updated = { ...response._doc, ...req.body }
+    res.status(200).json(updated)
   } catch (error) {
-    console.log(error);
-    res.sendStatus(500).send("Olmadı be knk :(");
+    res.status(500).json({ message: error.message })
   }
-});
+})
 
-router.delete('/', async (req, res) => {
-  await User.deleteMany({ name: /osman@gmail.com/});
-  console.log("Başarılı");
+router.delete('/:id', async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id)
+    res.status(200).send("Kullanıcı Başarıyla silindi")
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
 })
 
 export default router

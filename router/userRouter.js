@@ -42,7 +42,13 @@ router.post("/", async (req, res) => {
 
 router.put('/:id', async(req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body)
+    const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      username: req.body.username,
+      fullName: req.body.fullName,
+      email: req.body.email,
+      password: hashedPwd
+    })
     if (!user) throw Error('Something went wrong')
     const updated = { ...response._doc, ...req.body }
     res.status(200).json(updated)
